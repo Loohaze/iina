@@ -958,6 +958,16 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
     if isOntop {
       setWindowFloatingOnTop(true)
     }
+    if ud.bool(forKey: PK.blackOutMonitor) {
+      removeBlackWindow()
+    }
+  }
+  
+  func windowDidEnterFullScreen(_ noitification: Notification) {
+    lastScreen = window?.screen
+    if ud.bool(forKey: PK.blackOutMonitor) {
+      blackOutOtherMonitors()
+    }
   }
 
   func windowDidResize(_ notification: Notification) {
@@ -1556,17 +1566,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
     if !isInFullScreen && isOntop {
       setWindowFloatingOnTop(false)
     }
-    
     window?.toggleFullScreen(self)
-
-    lastScreen = window?.screen
-    if ud.bool(forKey: PK.blackOutMonitor) {
-      if isInFullScreen {
-        blackOutOtherMonitors()
-      } else {
-        removeBlackWindow()
-      }
-    }
   }
 
   /** This method will not set `isOntop`! */
